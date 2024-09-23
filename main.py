@@ -20,4 +20,4 @@ def get_posts(community):
     return jsonify({"posts": db_posts})
 
 if __name__ == "__main__":
-    app.run(host='3.37.127.102', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
