@@ -1,13 +1,16 @@
 import psycopg2
+import os
+from dotenv import load_dotenv
 
 def postgresql_connect():
+    load_dotenv()
     try:
         connection = psycopg2.connect(
-            dbname="posts_db",
-            user="project5587",
-            password="tung0324!",
-            host="localhost",
-            port="5432"
+            dbname=os.environ.get("POSTGRES_DB"),
+            user=os.environ.get("POSTGRES_USER"),
+            password=os.environ.get("POSTGRES_PASSWORD"),
+            host=os.environ.get("POSTGRES_HOST"),
+            port=os.environ.get("POSTGRES_PORT")
         )
         print("PostgreSQL 데이터베이스에 연결되었습니다.")
         return connection
