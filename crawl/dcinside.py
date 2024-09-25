@@ -57,31 +57,29 @@ def dc_best_crawl():
                     if not post_link.startswith('http'):
                         post_link = f"https://gall.dcinside.com{post_link}"
 
-                    post_title = re.sub(r'$$[^$$]{2}\]', '', post_title_re)
-                    post_title = re.sub(r'$$\d+$$', '', post_title).strip()
+                    post_title = re.sub(r'^$$[^$$]+\]\s*|$$\d+$$$', '', post_title_re).strip()
 
                     post_look_count = post.select_one('.gall_count').get_text().strip()
                     post_likes_count = post.select_one('.gall_recommend').get_text().strip()
 
-                    # 게시글 데이터를 딕셔너리로 구성
-                    post_data = {
-                        'post_num': int(post_num),  # 숫자로 변환
-                        'post_title': post_title,
-                        'post_link': post_link,
-                        'post_look_count': int(post_look_count.replace(',', '')),
-                        'post_likes_count': int(post_likes_count.replace(',', ''))
-                    }
+                    if 8000 <= post_look_count <= 20000 and 80 <= post_likes_count <= 200:
+                        post_data = {
+                            'post_num': int(post_num),  # 숫자로 변환
+                            'post_title': post_title,
+                            'post_link': post_link,
+                            'post_look_count': int(post_look_count.replace(',', '')),
+                            'post_likes_count': int(post_likes_count.replace(',', ''))
+                        }
 
-                    # 데이터베이스에 삽입
-                    db.postgresql_insert(connection, post_data, community)
+                        db.postgresql_insert(connection, post_data, community)
 
-                    print(f"게시글 저장: {post_data['post_num']} - {post_data['post_title']}")
+                        print(f"게시글 저장: {post_data['post_num']} - {post_data['post_title']}")
 
                 except Exception as e:
                     print(f"게시글 처리 중 오류 발생: {e}")
 
                 # 너무 빠르게 요청하지 않도록 잠시 대기
-                time.sleep(1)  # 2초 대신 1초로 조정 (필요 시 다시 2초로 변경)
+                time.sleep(0.5)  # 2초 대신 1초로 조정 (필요 시 다시 2초로 변경)
     finally:
         # 크롤링 종료 후 데이터베이스 연결 종료
         connection.close()
