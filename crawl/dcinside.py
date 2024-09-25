@@ -54,8 +54,8 @@ def dc_best_crawl():
                         'post_num': int(post_num),  # 숫자로 변환
                         'post_title': post_title,
                         'post_link': post_link,
-                        'post_look_count': int(post_look_count.replace(',', '')),  # 숫자 형식으로 변환
-                        'post_likes_count': int(post_likes_count.replace(',', ''))   # 숫자 형식으로 변환
+                        'post_look_count': int(post_look_count.replace(',', '')),
+                        'post_likes_count': int(post_likes_count.replace(',', ''))
                     }
                     
                     # 데이터베이스에 삽입
