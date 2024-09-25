@@ -4,6 +4,12 @@ import time
 import re
 import db
 
+# [디시인사이드]
+# 실시간 베스트
+# ㅇㅎ빼고
+# 조회수 8000 이상 20,000 이하
+# 추천 80 이상 200이하
+
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 
 def dc_best_crawl():
@@ -35,16 +41,19 @@ def dc_best_crawl():
 
             for post in posts:
                 try:
-                    post_num = post.select_one('.gall_num').get_text().strip()
                     post_title_re = post.select_one('.gall_tit.ub-word').get_text().strip().replace('\n', '')
+                    if "ㅇㅎ" in post_title_re or "야갤" in post_title_re:
+                        continue
+
+                    post_num = post.select_one('.gall_num').get_text().strip()
                     post_link = post.select_one('.gall_tit.ub-word a').get('href')
 
                     # link가 절대 경로가 아닌 경우 절대 경로로 변환
                     if not post_link.startswith('http'):
                         post_link = f"https://gall.dcinside.com{post_link}"
 
-                    # 정규 표현식을 사용하여 제목 클린업
-                    post_title = re.sub(r'\$\$[가-힣]{2}\s*\$\$', '', post_title_re).strip()
+                    post_title = re.sub(r'$$[^$$]{2}\]', '', post_title_re)
+                    post_title = re.sub(r'$$\d+$$', '', post_title).strip()
 
                     post_look_count = post.select_one('.gall_count').get_text().strip()
                     post_likes_count = post.select_one('.gall_recommend').get_text().strip()
