@@ -22,7 +22,7 @@ def get_posts(community):
 
 if __name__ == "__main__":
     try:
-        app.run(host='0.0.0.0', port=5000)  # 호스트와 포트를 설정
+        app.run()  # 호스트와 포트를 설정
     except Exception as e:
         logging.error(f"Flask 서버 실행 오류: {e}")
     finally:
