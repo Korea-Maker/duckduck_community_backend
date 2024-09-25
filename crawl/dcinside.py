@@ -62,7 +62,7 @@ def dc_best_crawl():
                     post_look_count = post.select_one('.gall_count').get_text().strip()
                     post_likes_count = post.select_one('.gall_recommend').get_text().strip()
 
-                    if 8000 <= post_look_count <= 20000 and 80 <= post_likes_count <= 200:
+                    if 8000 <= int(post_look_count) <= 20000 and 80 <= int(post_likes_count) <= 200:
                         post_data = {
                             'post_num': int(post_num),  # 숫자로 변환
                             'post_title': post_title,
