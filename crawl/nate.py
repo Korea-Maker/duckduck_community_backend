@@ -24,11 +24,14 @@ def crawl(url):
         datas = soup.select('#container > div.content.sub > div.mainarea > div.tsCnt > div.cntList > ul > li')
         for data in datas:
             try:
+                post_look_count = data.select_one('dl > dd.info > span.count').get_text().split('조회 ')[1].replace(',','').strip()
+                if int(post_look_count) <= 200000:
+                    continue
+                    
                 like_count = data.select_one('dl > dd.info > span.rcm').get_text().split('추천 ')[1].replace(',', '').strip()
                 post_link = data.select_one('dl > dt > h2 > a').get('href')
                 title = data.select_one('dl > dt > h2 > a').get_text().strip()
                 post_link = f"https://pann.nate.com/{post_link}"
-                post_look_count = data.select_one('dl > dd.info > span.count').get_text().split('조회 ')[1].replace(',', '').strip()
                 post_num = post_link.split('/')[-1]
 
                 post_data = {
