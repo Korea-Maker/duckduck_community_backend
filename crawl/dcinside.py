@@ -50,30 +50,31 @@ def dc_best_crawl():
                     if "ㅇㅎ" in post_title_re or "야갤" in post_title_re:
                         continue
 
+                    post_look_count = post.select_one('.gall_count').get_text().strip()
+                    post_likes_count = post.select_one('.gall_recommend').get_text().strip()
+
+                    if 8000 <= int(post_look_count) <= 20000 and 80 <= int(post_likes_count) <= 200:
+                        continue
+
                     post_num = post.select_one('.gall_num').get_text().strip()
                     post_link = post.select_one('.gall_tit.ub-word a').get('href')
 
-                    # link가 절대 경로가 아닌 경우 절대 경로로 변환
                     if not post_link.startswith('http'):
                         post_link = f"https://gall.dcinside.com{post_link}"
 
                     post_title = re.sub(r'^$$[^$$]+\]\s*|$$\d+$$$', '', post_title_re).strip()
 
-                    post_look_count = post.select_one('.gall_count').get_text().strip()
-                    post_likes_count = post.select_one('.gall_recommend').get_text().strip()
+                    post_data = {
+                        'post_num': int(post_num),  # 숫자로 변환
+                        'post_title': post_title,
+                        'post_link': post_link,
+                        'post_look_count': int(post_look_count.replace(',', '')),
+                        'post_likes_count': int(post_likes_count.replace(',', ''))
+                    }
 
-                    if 8000 <= int(post_look_count) <= 20000 and 80 <= int(post_likes_count) <= 200:
-                        post_data = {
-                            'post_num': int(post_num),  # 숫자로 변환
-                            'post_title': post_title,
-                            'post_link': post_link,
-                            'post_look_count': int(post_look_count.replace(',', '')),
-                            'post_likes_count': int(post_likes_count.replace(',', ''))
-                        }
+                    db.postgresql_insert(connection, post_data, community)
 
-                        db.postgresql_insert(connection, post_data, community)
-
-                        print(f"게시글 저장: {post_data['post_num']} - {post_data['post_title']}")
+                    print(f"게시글 저장: {post_data['post_num']} - {post_data['post_title']}")
 
                 except Exception as e:
                     print(f"게시글 처리 중 오류 발생: {e}")
