@@ -29,7 +29,13 @@ def crawl(url):
                 if int(like_count) <= 100:
                     continue
                 post_link = data.select_one('div > div > p > a').get('href').split('#')[0]
-                title = data.select_one('div + strong').get_text().strip()
+                info_div = data.select_one('div[class^="ListItem_info"]')
+                if info_div:
+                    title_tag = info_div.select_one('strong')
+                    if title_tag:
+                        title = title_tag.get_text().strip()
+                    else:
+                        print("Title tag not found in info_div")
                 if not post_link.startswith('http'):
                     post_link = f"https://m.bboom.naver.com{post_link}"
 
