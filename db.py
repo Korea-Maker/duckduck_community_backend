@@ -32,7 +32,7 @@ def postgresql_insert(connection, post, community):
 def postgresql_select(connection, community):
     try:
         cursor = connection.cursor()
-        sql = f"SELECT * FROM {community}_posts"
+        sql = f"SELECT * FROM {community}_posts ORDER BY created_at DESC"
         cursor.execute(sql)
         posts = cursor.fetchall()
         cursor.close()
