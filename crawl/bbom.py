@@ -29,7 +29,7 @@ def crawl(url):
                 if int(like_count) <= 100:
                     continue
                 post_link = data.select_one('div > div > p > a').get('href').split('#')[0]
-                title = data.select_one('div > strong').get_text().strip()
+                title = data.select_one('div + strong').get_text().strip()
                 if not post_link.startswith('http'):
                     post_link = f"https://m.bboom.naver.com{post_link}"
 
