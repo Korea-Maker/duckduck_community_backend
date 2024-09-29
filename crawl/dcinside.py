@@ -27,7 +27,7 @@ def dc_best_crawl():
         return
 
     try:
-        for page in range(1, 2):
+        for page in range(1, 3):
             url = f'https://gall.dcinside.com/board/lists/?id=dcbest&page={page}&_dcbest=1'
             print(f"크롤링 중: {url}")
             response = requests.get(url, headers={"User-Agent": USER_AGENT})
